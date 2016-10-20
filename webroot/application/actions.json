@@ -1,0 +1,27 @@
+{
+  "users.get": {
+    "type": "json",
+    "allowed_fields": [
+      "user_id",
+      "user_ids"
+    ]
+  },
+  "messages.send": {
+    "type": "json",
+    "allowed_fields": [
+      "user_id",
+      "random_id",
+      "peer_id",
+      "domain",
+      "chat_id",
+      "user_ids",
+      "message",
+      "lat",
+      "long",
+      "attachment",
+      "forward_messages",
+      "sticker_id",
+      "notification"
+    ]
+  }
+}
