@@ -1,0 +1,34 @@
+{
+  "name": "vk-sdk-cake_php3.x",
+  "version": "1.0.0",
+  "description": "VK SDK for CakePHP 3.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KielD-01/cakephp-vk-sdk.git"
+  },
+  "keywords": [
+    "vk",
+    "sdk",
+    "cake",
+    "php",
+    "cakephp",
+    "angular",
+    "materialize"
+  ],
+  "author": "Roman Kozin <romako95.rk@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KielD-01/cakephp-vk-sdk/issues"
+  },
+  "homepage": "https://github.com/KielD-01/cakephp-vk-sdk#readme",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "angular-sanitize": "^1.5.8",
+    "materialize-css": "^0.97.7"
+  }
+}
