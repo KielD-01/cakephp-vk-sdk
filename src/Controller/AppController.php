@@ -78,4 +78,22 @@ class AppController extends Controller
 
         return $this->response;
     }
+
+    /**
+     * @param $input
+     * @return array
+     */
+    protected function _parseInput($input)
+    {
+        $vars = explode('&', $input);
+
+        $request = [];
+
+        foreach ($vars as $var) {
+            $data = explode('=', $var);
+            $request[$data[0]] = $data[1];
+        }
+
+        return $request;
+    }
 }

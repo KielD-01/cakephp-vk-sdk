@@ -8,7 +8,8 @@ Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'index']);
-    $routes->fallbacks(DashedRoute::class);
+    $routes->connect('/login', ['controller' => 'Client', 'action' => 'authorize']);
+    $routes->connect('/check-auth', ['controller' => 'Client', 'action' => 'checkAuth']);
 });
 
 Plugin::routes();

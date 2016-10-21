@@ -1,0 +1,24 @@
+{
+  "actions": {
+    "users.get": {
+      "name": "",
+      "description": "",
+      "fields": {
+        "or": {
+          "user_id": {
+            "title": "User ID",
+            "element": "input",
+            "type": "number",
+            "name": "user_id"
+          },
+          "domain": {
+            "title": "User Domain (ex. pavel_durov)",
+            "element": "input",
+            "type": "text",
+            "name": "domain"
+          }
+        }
+      }
+    }
+  }
+}
