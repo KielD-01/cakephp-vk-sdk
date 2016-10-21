@@ -3,6 +3,10 @@
 /vendor/*
 /config/app.php
 
+/tmp
+/logs
+.idea
+.idea/workspace.xml
 /tmp/cache/models/*
 !/tmp/cache/models/empty
 /tmp/cache/persistent/*
@@ -13,17 +17,6 @@
 !/tmp/sessions/empty
 /tmp/tests/*
 !/tmp/tests/empty
-
-/logs/*
-!/logs/empty
-
-# CakePHP 2
-
-/app/tmp/*
-/app/Config/core.php
-/app/Config/database.php
-/vendors/*
-
 
 # Custom
 /webroot/node_modules
