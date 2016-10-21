@@ -27,6 +27,7 @@
   "homepage": "https://github.com/KielD-01/cakephp-vk-sdk#readme",
   "dependencies": {
     "angular": "^1.5.8",
+    "angular-block-ui": "^0.2.2",
     "angular-route": "^1.5.8",
     "angular-sanitize": "^1.5.8",
     "materialize-css": "^0.97.7"
