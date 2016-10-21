@@ -7,6 +7,7 @@ use App\Interfaces\TokenHandlerInterface;
 use App\Traits\SenderTrait;
 use Cake\Cache\Cache;
 use Cake\Controller\Component\CookieComponent;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Client as G;
 use GuzzleHttp\Cookie\CookieJar;
@@ -62,8 +63,6 @@ class ClientController extends AppController implements AuthInterface, TokenHand
         ]);
         $this->_settings = $this->_loadSettings()
             ->application;
-
-        $this->checkCookie();
     }
 
     /**
@@ -89,37 +88,66 @@ class ClientController extends AppController implements AuthInterface, TokenHand
         return Cache::write($this->_cachePrefix . $key, $value);
     }
 
-    public function authorize($numberOrEmail, $password, array $scope = ['offline'])
+    /**
+     * @param $numberOrEmail
+     * @param $password
+     * @return \Cake\Network\Response|null
+     */
+    public function authorize($numberOrEmail, $password)
     {
-
-    }
-
-    public function action()
-    {
-        $this->autoRender = false;
-        return $this->_jsonResponse(
-            json_decode(
-                $this->_prepare('messages.send', [
-                    'domain' => 'egoistfromdivel',
-                    'message' => 'Отправляю с приложухи'
-                ])
-            )
-        );
-    }
-
-    private function checkCookie()
-    {
-        if (!$this->Cookie->read('vk_uid') || !Cache::read('token')) {
+        if (!$this->Cookie->read('vk_uid')) {
             $vkData = $this->VkAuth->_auth(
                 $this->_sender,
                 $this->_jar,
                 $this->_settings->app_id,
                 $this->_settings->secret_key,
-                '380636638372',
-                'Airglide18841q2w3e4r'
+                $numberOrEmail,
+                $password
             );
-            $this->_token = $vkData->access_token;
-            $this->Cookie->write('vk_uid', $vkData->user_id);
+
+            if ($vkData) {
+                $this->_token = $vkData->access_token;
+                $this->Cookie->write('vk_uid', $vkData->user_id);
+
+                return $this->_jsonResponse([
+                    'auth' => $vkData,
+                    'status' => 1,
+                    'error' => []
+                ]);
+            }
+
+            return $this->_jsonResponse([
+                'auth' => [],
+                'status' => 0,
+                'error' => __('auth_failed')
+            ]);
+
+        } else {
+            return $this->_jsonResponse([
+                'auth' => Cache::read('token_' . $this->Cookie->read('vk_uid')),
+                'status' => 1,
+                'error' => []
+            ]);
         }
+    }
+
+    /**
+     * @return \Cake\Network\Response|null
+     * @throws Exception
+     */
+    public function executeAction()
+    {
+        $this->autoRender = false;
+        if ($this->request->is(['ajax', 'post'])) {
+            $data = $this->request->data;
+
+            return $this->_jsonResponse(
+                json_decode(
+                    $this->_prepare($data['action'], $data['fields'])
+                )
+            );
+        }
+
+        throw new Exception('You are not allowed to be here', 403);
     }
 }

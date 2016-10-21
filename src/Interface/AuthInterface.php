@@ -13,8 +13,7 @@ interface AuthInterface
      *
      * @param $numberOrEmail
      * @param $password
-     * @param array $scope
      * @return string
      */
-    public function authorize($numberOrEmail, $password, array $scope = ['offline']);
+    public function authorize($numberOrEmail, $password);
 }

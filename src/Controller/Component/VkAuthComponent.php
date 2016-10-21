@@ -154,7 +154,7 @@ class VkAuthComponent extends Component
                 'on_stats' => $this->_statsFunction
             ]);
             $token = json_decode($token->getBody()->getContents());
-            Cache::write('token', $token);
+            Cache::write('token_' . $token->user_id, $token);
         }
         return $token;
     }
