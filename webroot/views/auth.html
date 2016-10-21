@@ -1,10 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div class="card" ng-controller="Auth">
+    <div class="card-content">
+        <div class="center">
+            <p class="card-title centered-text">Sign In</p>
+        </div>
+        <div class="center">
+
+            <div class="row center">
+                <form action="/login" class="center">
+
+                    <div class="form-input col s12 offset-m4 m4 center">
+                        <div class="col s12 m2">
+                            <i class="material-icons">login</i>
+                        </div>
+                        <div class="col s12 m10">
+                            <input type="text" name="email" ng-model="email" class="input-field">
+                        </div>
+                    </div>
+
+                    <div class="form-input col s12 offset-m4 m4 center">
+                        <div class="col s12 m2">
+                            <i class="material-icons">pass</i>
+                        </div>
+                        <div class="col s12 m10">
+                            <input type="password" name="pass" ng-model="pass" class="input-field">
+                        </div>
+                    </div>
+
+
+                    <div class="form-input col s12 offset-m4 m4 center">
+                        <div class="col s12">
+                            <button type="button" class="btn btn-primary col s12" ng-click="auth();">Sign In</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
