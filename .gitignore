@@ -6,6 +6,7 @@
 /tmp
 /logs
 .idea
+.idea/workspace.xml
 /tmp/cache/models/*
 !/tmp/cache/models/empty
 /tmp/cache/persistent/*
