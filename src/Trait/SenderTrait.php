@@ -37,12 +37,11 @@ trait SenderTrait
      */
     private $_requestData;
 
-    public function _prepare($action, array $data = [], array $scope = [])
+    public function _prepare($action, array $data = [])
     {
         $this->_data = $data;
         $this->_loadActions();
         $this->_loadActionByKey($action);
-        $this->_checkActionScope($scope);
         $this->_proceed();
         return $this->_send();
     }
@@ -53,7 +52,7 @@ trait SenderTrait
      * @return mixed
      * @throws Exception
      */
-    protected function _loadSettings()
+    private function _loadSettings()
     {
         if (!$settings = (new File(Configure::read('settings_file')))) {
             throw new Exception('No \'settings.json\' file exists');
@@ -97,10 +96,6 @@ trait SenderTrait
         throw new Exception('No action key found like ' . $key);
     }
 
-    private function _checkActionScope(array $scope = [])
-    {
-    }
-
     /**
      * @return string
      */
@@ -114,7 +109,10 @@ trait SenderTrait
 
         $requestString[] = "access_token=" . Cache::read('token')->access_token;
         $requestString[] = 'v=5.5';
-        $requestString[] = 'sig=' . md5('/method/messages.send?' . implode('&', $requestString) . Cache::read('token')->secret);
+
+        if ($this->_sig = true) {
+            $requestString[] = 'sig=' . md5('/method/' . $this->_action . '?' . implode('&', $requestString) . Cache::read('token')->secret);
+        }
 
         return $this->_requestData = implode('&', $requestString);
     }
@@ -123,7 +121,11 @@ trait SenderTrait
     {
         $client = new Client();
 
-        $response = $client->request('GET', 'https://api.vk.com/method/messages.send?' . $this->_requestData);
+        $response = $client->request('GET', 'https://api.vk.com/method/'
+            . $this->_action->action . '?'
+            . $this->_requestData
+        );
+
         return $response
             ->getBody()
             ->getContents();

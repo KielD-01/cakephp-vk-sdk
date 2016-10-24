@@ -28,6 +28,7 @@
   "dependencies": {
     "angular": "^1.5.8",
     "angular-block-ui": "^0.2.2",
+    "angular-materialize": "^0.2.1",
     "angular-route": "^1.5.8",
     "angular-sanitize": "^1.5.8",
     "materialize-css": "^0.97.7"

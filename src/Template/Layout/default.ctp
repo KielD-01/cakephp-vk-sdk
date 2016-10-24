@@ -11,6 +11,7 @@
     <?= $this->Html->script('../node_modules/angular-route/angular-route.min') ?>
     <?= $this->Html->script('../node_modules/angular-sanitize/angular-sanitize.min') ?>
     <?= $this->Html->script('../node_modules/angular-block-ui/dist/angular-block-ui.min') ?>
+    <?= $this->Html->script('../node_modules/angular-materialize/src/angular-materialize.min') ?>
     <?= $this->Html->script('sdk_app') ?>
 
     <?= $this->fetch('css') ?>

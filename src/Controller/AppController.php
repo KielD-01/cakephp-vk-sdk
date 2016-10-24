@@ -43,7 +43,6 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-        $this->loadComponent('Auth');
         $this->loadComponent('Cookie');
         $this->loadComponent('VkAuth');
     }
@@ -80,12 +79,11 @@ class AppController extends Controller
     }
 
     /**
-     * @param $input
      * @return array
      */
-    protected function _parseInput($input)
+    protected function _parseInput()
     {
-        $vars = explode('&', $input);
+        $vars = explode('&', $this->request->input());
 
         $request = [];
 

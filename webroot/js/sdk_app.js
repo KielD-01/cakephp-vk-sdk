@@ -2,7 +2,7 @@
  VK SDK Application
  */
 
-var sdk = angular.module('sdkMain', ['ngRoute', 'ngSanitize', 'blockUI']),
+var sdk = angular.module('sdkMain', ['ngRoute', 'ngSanitize', 'blockUI', 'ui.materialize']),
     settings = {
         tplPath: '../views/',
         tplExt: '.html',
@@ -16,16 +16,37 @@ sdk.config(function ($routeProvider) {
         templateUrl: function (url) {
             return settings.f(url.template);
         },
-        controller: 'Auth'
+        controller: 'Actions'
     })
         .when('/', {
             templateUrl: settings.f('auth'),
             controller: 'Auth'
-        });
+        })
+        .otherwise('/');
 });
 
-sdk.run(function ($rootScope) {
+sdk.run(function ($rootScope, $http, blockUI) {
     $rootScope.check = 0;
+
+    if ($rootScope.check == 0) {
+
+        blockUI.start({
+            message: 'Checking authorization',
+            'z-index': 1000
+        });
+
+        $http.get('/check-auth').then(function (res) {
+            blockUI.stop();
+            if (res.data.status == 1) {
+                $rootScope.user = res.data.user;
+                $rootScope.check = 1;
+                return location.hash = '#/menu';
+            } else {
+                return location.hash = '#/';
+            }
+        });
+    }
+
 });
 
 sdk.service('CheckerService', function () {
@@ -82,6 +103,7 @@ sdk.controller('Auth', function ($rootScope, $scope, $http, $httpParamSerializer
                     pass: $scope.pass
                 })).then(function (res) {
                     $rootScope.user = res.data.auth;
+
                     if (res.data.status == 1) {
                         location.hash = '#/menu'
                     }
@@ -92,23 +114,41 @@ sdk.controller('Auth', function ($rootScope, $scope, $http, $httpParamSerializer
             }
         }
     };
+});
 
-    if ($rootScope.check == 0) {
-
-        blockUI.start({
-            message: 'Checking authorization',
-            'z-index': 1000
+sdk.controller('Actions', function ($scope, $http, $rootScope) {
+    $scope.actions = function () {
+        $http.get('/application/allowed.json').then(function (response) {
+            return $scope.actions = response.data.actions;
         });
+    };
 
-        $http.get('/check-auth').then(function (res) {
-            blockUI.stop();
-            if (res.data.status == 1) {
-                $rootScope.user = res.data.user;
-                $rootScope.check = 1;
-                return location.hash = '#/menu';
-            } else {
-                return location.hash = '#/';
+    $scope.user = function () {
+        $http.get('http://api.vk.com/method/users.get?user_id=' + $rootScope.user.user_id + '&v=5.5').then(function (res) {
+            return $scope.user = res.data;
+        });
+    };
+
+    $scope.actionForm = function (index) {
+        angular.forEach($scope.actions, function (action, i) {
+            if (i == index) {
+                $scope.formFields = action.fields;
+                $scope.selectedAction = '';
+                $('ul.tabs').tabs('select_tab', 'field-dynamic-0');
+                return true;
             }
         });
+    };
+
+    $scope.actions();
+    $scope.user();
+});
+
+$('a').on('click', function () {
+    if ($(this).data('tab')) {
+        $('div[data-tabs="fields"]').hide();
+        $('div[id="' + $(this).data('tab') + '"]').show();
+        $('a[data-tab]').removeClass('active');
+        $('a[data-tab="' + $(this).data('tab') + '"]').addClass('active');
     }
 });

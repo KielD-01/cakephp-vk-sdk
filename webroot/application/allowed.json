@@ -1,21 +1,45 @@
 {
   "actions": {
     "users.get": {
-      "name": "",
+      "name": "users.get",
       "description": "",
       "fields": {
-        "or": {
-          "user_id": {
-            "title": "User ID",
-            "element": "input",
-            "type": "number",
-            "name": "user_id"
-          },
-          "domain": {
-            "title": "User Domain (ex. pavel_durov)",
-            "element": "input",
-            "type": "text",
-            "name": "domain"
+        "conditions": {
+          "or": {
+            "user_id": {
+              "title": "User ID",
+              "element": "input",
+              "type": "number",
+              "name": "user_id"
+            },
+            "domain": {
+              "title": "User Domain (ex. pavel_durov)",
+              "element": "input",
+              "type": "text",
+              "name": "domain"
+            }
+          }
+        }
+      }
+    },
+    "messages.send": {
+      "name": "messages.send",
+      "description": "",
+      "fields": {
+        "conditions": {
+          "or": {
+            "user_id": {
+              "title": "User ID",
+              "element": "input",
+              "type": "number",
+              "name": "user_id"
+            },
+            "domain": {
+              "title": "User Domain (ex. pavel_durov)",
+              "element": "input",
+              "type": "text",
+              "name": "domain"
+            }
           }
         }
       }

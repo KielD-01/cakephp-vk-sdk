@@ -50,15 +50,14 @@ class ClientController extends AppController implements AuthInterface, TokenHand
      */
     public $components = ['Cookie', 'VkAuth'];
 
+    /**
+     * @var string
+     */
     protected $_token;
 
     public function initialize()
     {
         parent::initialize();
-
-        $this->Auth->allow([
-            'authorize', 'checkAuth'
-        ]);
 
         $this->_jar = new CookieJar();
 
@@ -101,70 +100,37 @@ class ClientController extends AppController implements AuthInterface, TokenHand
     {
         if ($this->request->is(['post', 'ajax'])) {
             $auth = $this->_parseInput($this->request->input());
-            if (!$this->Cookie->read('vk_uid')) {
+            if (Cache::read('token_' . $this->Cookie->read('vk_uid'))) {
+                return $this->_jsonResponse([
+                    'auth' => Cache::read('token_' . $this->Cookie->read('vk_uid')),
+                    'status' => 1,
+                    'error' => []
+                ]);
+            }
 
-
-                $vkData = $this->VkAuth->_auth(
-                    $this->_sender,
-                    $this->_jar,
-                    $this->_settings->app_id,
-                    $this->_settings->secret_key,
-                    $auth['email'],
-                    $auth['pass']
-                );
-
-                if ($vkData) {
-                    $this->_token = $vkData->access_token;
-                    $this->Cookie->write('vk_uid', $vkData->user_id);
-
-                    return $this->_jsonResponse([
-                        'auth' => $vkData,
-                        'status' => 1,
-                        'error' => []
-                    ]);
-                }
+            $vkData = $this->VkAuth->_auth(
+                $this->_sender,
+                $this->_jar,
+                $this->_settings->app_id,
+                $this->_settings->secret_key,
+                $auth['email'],
+                $auth['pass']
+            );
+            if ($vkData) {
+                $this->_token = $vkData->access_token;
+                $this->Cookie->write('vk_uid', $vkData->user_id);
 
                 return $this->_jsonResponse([
-                    'auth' => [],
-                    'status' => 0,
-                    'error' => __('auth_failed')
+                    'auth' => $vkData,
+                    'status' => 1,
+                    'error' => []
                 ]);
-
-            } else {
-                if (Cache::read('token_' . $this->Cookie->read('vk_uid'))) {
-                    return $this->_jsonResponse([
-                        'auth' => Cache::read('token_' . $this->Cookie->read('vk_uid')),
-                        'status' => 1,
-                        'error' => []
-                    ]);
-                } else {
-                    $vkData = $this->VkAuth->_auth(
-                        $this->_sender,
-                        $this->_jar,
-                        $this->_settings->app_id,
-                        $this->_settings->secret_key,
-                        $auth['email'],
-                        $auth['pass']
-                    );
-
-                    if ($vkData) {
-                        $this->_token = $vkData->access_token;
-                        $this->Cookie->write('vk_uid', $vkData->user_id);
-
-                        return $this->_jsonResponse([
-                            'auth' => $vkData,
-                            'status' => 1,
-                            'error' => []
-                        ]);
-                    }
-
-                    return $this->_jsonResponse([
-                        'auth' => [],
-                        'status' => 0,
-                        'error' => __('auth_failed')
-                    ]);
-                }
             }
+            return $this->_jsonResponse([
+                'auth' => [],
+                'status' => 0,
+                'error' => __('auth_failed')
+            ]);
         }
 
         return $this->redirect(
@@ -180,7 +146,7 @@ class ClientController extends AppController implements AuthInterface, TokenHand
     {
         $this->autoRender = false;
         if ($this->request->is(['ajax', 'post'])) {
-            $data = $this->request->data;
+            $data = $this->_parseInput();
 
             return $this->_jsonResponse(
                 json_decode(
@@ -192,6 +158,9 @@ class ClientController extends AppController implements AuthInterface, TokenHand
         throw new Exception('You are not allowed to be here', 403);
     }
 
+    /**
+     * @return \Cake\Network\Response|null
+     */
     public function checkAuth()
     {
         if ($this->Cookie->read('vk_uid')) {

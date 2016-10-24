@@ -1,6 +1,7 @@
 {
   "users.get": {
     "type": "json",
+    "action": "users.get",
     "allowed_fields": [
       "user_id",
       "user_ids"
@@ -8,6 +9,7 @@
   },
   "messages.send": {
     "type": "json",
+    "action": "messages.send",
     "allowed_fields": [
       "user_id",
       "random_id",

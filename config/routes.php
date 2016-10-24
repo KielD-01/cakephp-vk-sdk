@@ -10,6 +10,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'index']);
     $routes->connect('/login', ['controller' => 'Client', 'action' => 'authorize']);
     $routes->connect('/check-auth', ['controller' => 'Client', 'action' => 'checkAuth']);
+
+    $routes->connect('/test', ['controller' => 'Pages', 'action' => 'test']);
 });
 
 Plugin::routes();
